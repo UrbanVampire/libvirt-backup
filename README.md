@@ -8,7 +8,7 @@
 - "blacklist" to exclude some virtual machines from the backup process,
 - individual disk backup settings for each virtual machine,
 - flexible informing settings,
-- output of logs to STDIN, systemd journal, logfile,
+- logs output to STDIN, systemd journal, logfile,
 - sending the results to e-mail or Telegram.
 
 ## Installation:
@@ -83,7 +83,7 @@ chmod +x libvirt-backup.sh
 
 Также при первом запуске скрипт создаст файл конфигурации, который вам нужно будет отредактировать под свои нужды. Файл сожержит комментарии с объяснением каждого параметра и указанием значений по-умолчанию.
 
-По-умолчанию файл конфигурации создаётся (а затем ищется скриптом) в той же папке, в которой находится сам скрипт, и с тем же именем и расширением '.conf'. Имеется возможность хранения файла конфигурации в папке '/etc'. Для этого вам нужно раскомментирвоать две строки в теле скрипта:
+По-умолчанию файл конфигурации создаётся (а затем ищется скриптом) в той же папке, в которой находится сам скрипт, и с тем же именем и расширением '.conf'. Имеется возможность хранения файла конфигурации в папке '/etc'. Для этого вам нужно раскомментировать две строки в теле скрипта:
 
 ```
 CONFIGFILE="/etc/$SCRIPTNAME.config"
