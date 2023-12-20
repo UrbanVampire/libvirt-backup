@@ -7,6 +7,7 @@
 - simultaneous operation of several copies of the script with different settings on one host,
 - "blacklist" to exclude some virtual machines from the backup process,
 - individual disk backup settings for each virtual machine,
+- backups archiving using 7zip, tar/gzip, tar/bzip2, pigz,
 - flexible informing settings,
 - logs output to STDIN, systemd journal, logfile,
 - sending the results to e-mail or Telegram.
@@ -25,6 +26,7 @@ run:
 ```
 ./libvirt-backup.sh
 ```
+## Usage:
 
 At the first run the script will install required utilities.
 
@@ -43,6 +45,8 @@ The first line locates the script in '/etc', the second line checks for sudo pri
 
 For your convenience, the script adds a complete list of your virtual machines and their disks to the configuration file. To generate an up-to-date list delete or rename the configuration file and run the script, a new configuration template with an up-to-date list will be generated.
 
+If you want to use a script with different settings (e.g., archiving, storage location, or log method), create a copy of the script with a different name, and it will use its own settings file.
+
 ## Known issues:
 
 The script does not support VM's names and paths with spaces.
@@ -58,6 +62,7 @@ In case you find a bug, inaccuracy, or have a suggestion to improve the script -
 - одновременная работа нескольких копий скрипта с разными настройками на одном хосте,
 - "чёрный список" для исключения части виртуальных машин из процесса резервного копирования,
 - индивидуальные настройки резервного копирования дисков для каждой виртуальной машины,
+- архивация резервных копий при помощи 7zip, tar/gzip, tar/bzip2, pigz,
 - гибкие настройки информирования,
 - вывод логов на STDIN, в журнал systemd, в файл,
 - отправка результатов работы на e-mail или в Telegram.
@@ -77,6 +82,8 @@ chmod +x libvirt-backup.sh
 ./libvirt-backup.sh
 ```
 
+## Использование:
+
 При первом запуске скрипт установит необходимые для работы утилиты.
 ВНИМАНИЕ! В данный момент поддерживаются следующие пакетные менеджеры: apt-get, dnf, yum, zypper, pacman.
 Если вы хотите добавить поддержку другого пакетного менеджера - свяжитесь с разработчиком.
@@ -92,6 +99,8 @@ if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNN
 Первая строка определяет местоположение скрипта в '/etc', вторая проверяет наличие прав sudo.
 
 Для вашего удобства скрипт сразу добавляет в файл конфигурации полный список ваших виртуальных машин и их дисков. Чтобы сгенерировать актуальный список удалите или переименуйте файл конфигурации и запустите скрипт, будет сгенерирован новый шаблон конфигурации с актуальным списком.
+
+Если вы хотите использовать скрипт с разными настройками (к примеру архивации, места хранения или метода информаирования), создайте копию скрипта с другим именем, и он будет использовать свой файл настроек.
 
 ## Известные проблемы:
 
