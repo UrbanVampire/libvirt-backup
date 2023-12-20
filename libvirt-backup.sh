@@ -112,6 +112,15 @@ logger(){
 		echo "[$a] - $1" >> $LOGFILE
 	fi
 }
+# Log if command returns an error
+errorer(){
+	outp=$(eval $1 2>&1)
+	if [ $? -ne 0 ]; then
+		logger "ERROR: $outp"
+		return 1
+	fi
+	return 0
+}
 
 # Does config exist?
 if [ ! -e $CONFIGFILE ]; then
@@ -288,7 +297,7 @@ for DOMAIN in $DOMAINS; do
 	BACKUPFOLDER=$(echo "${BACKUPFOLDER//(BUVMname)/"$DOMAIN"}")
 	verboselog "Creating folder $BACKUPFOLDER."
 	if [ ! -d $BACKUPFOLDER ]; then
-		mkdir -p $BACKUPFOLDER
+		errorer "mkdir -p $BACKUPFOLDER"
 		if [ $? -ne 0 ]; then
 			verboselog "Error creating folder $BACKUPFOLDER. '$DOMAIN' skipped."
 			ERRORS=1
@@ -353,7 +362,7 @@ for DOMAIN in $DOMAINS; do
 				grepper2=$(echo $grepper2\|$a)
 			fi
 		done
-		virsh snapshot-create-as --domain "$DOMAIN" --name backup --no-metadata --atomic --disk-only $DISKSPEC >/dev/null
+		errorer "virsh snapshot-create-as --domain "$DOMAIN" --name backup --no-metadata --atomic --disk-only $DISKSPEC"
 		if [ $? -ne 0 ]; then
 			logger "Failed to create snapshot for '$DOMAIN'".
 			ERRORS=1
@@ -366,15 +375,20 @@ for DOMAIN in $DOMAINS; do
 	verboselog "Copying disks for '$DOMAIN'."
 	for t in $IMAGES; do
 		NAME=`basename "$t"`
-		verboselog "'$t' -> '$BACKUPFOLDER$NAME'"
-		cp "$t" "$BACKUPFOLDER$NAME"
+		a="'$t' -> '$BACKUPFOLDER$NAME'"
+		verboselog "$a"
+		errorer "cp '$t' '$BACKUPFOLDER$NAME'"
+		if [ $? -ne 0 ]; then
+			logger "Failed to copy $a".
+			ERRORS=1
+		fi
 	done
 
 	# Merge changes back.
 	if [ $STATUS != "shut" ]; then
 		verboselog "Removing snapshots for '$DOMAIN'."
 		for t in $TARGETS; do
-			virsh blockcommit "$DOMAIN" "$t" --active --pivot >/dev/null
+			errorer "virsh blockcommit "$DOMAIN" "$t" --active --pivot"
 			if [ $? -ne 0 ]; then
 				logger "Could not merge changes for disk $t of '$DOMAIN'. VM may be in invalid state."
 				ERRORS=1
@@ -386,9 +400,9 @@ for DOMAIN in $DOMAINS; do
 		# Cleanup left over backup images.
 		verboselog "Do some cleanups."
 		for t in $SNAPSHOTIMAGES; do
-			rm -f "$t"
+			errorer "rm -f '$t'"
 			if [ $? -ne 0 ]; then
-				logger "Could not delete snapshot image $t of '$DOMAIN'. VM may be in invalid state."
+				logger "Could not delete snapshot image $t of '$DOMAIN'. Remove it manually."
 				ERRORS=1
 			fi
 		done
@@ -399,16 +413,16 @@ for DOMAIN in $DOMAINS; do
 		archivename=$(echo "$BACKUPFOLDER" | sed 's:/*$::')
 		case $COMPRESS in
 			7z)
-				7z a $archivename.7z "$BACKUPFOLDER"/* >/dev/null
+				errorer "7z a $archivename.7z "$BACKUPFOLDER"/*"
 				;;
 			tar.gz)
-				sudo tar -zcvf $archivename.tar.gz -C "$BACKUPFOLDER" . >/dev/null
+				errorer "sudo tar -zcvf $archivename.tar.gz -C "$BACKUPFOLDER" . "
 				;;
 			tar.bz)
-				sudo tar -jcvf $archivename.tar.bz -C "$BACKUPFOLDER" . >/dev/null
+				errorer "sudo tar -jcvf $archivename.tar.bz -C "$BACKUPFOLDER" . "
 				;;
 			pigz)
-				sudo tar --use-compress-program="pigz -9 " -cvf $archivename.tar.gz -C "$BACKUPFOLDER" . >/dev/null
+				errorer "sudo tar --use-compress-program="pigz -9 " -cvf $archivename.tar.gz -C "$BACKUPFOLDER" . "
 				;;
 			*)
 				logger "Unknown archive type: $COMPRESS."
@@ -416,13 +430,17 @@ for DOMAIN in $DOMAINS; do
 				continue
 				;;
 		esac
-
 		if [ $? -ne 0 ]; then
 			logger "Error archiving $BACKUPFOLDER."
 			ERRORS=1
 			continue
 		fi
-		rm -R $BACKUPFOLDER
+		# Removing archived files
+		errorer "rm -R $BACKUPFOLDER"
+		if [ $? -ne 0 ]; then
+			logger "WARNING: Could not delete $BACKUPFOLDER after archiving."
+			WARNINGS=1
+		fi
 	fi
 done
 
