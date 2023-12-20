@@ -51,6 +51,7 @@ If you want to use a script with different settings (e.g., archiving, storage lo
 
 The script does not support VM's names and paths with spaces.
 
+##
 In case you find a bug, inaccuracy, or have a suggestion to improve the script - please contact the developer.
 
 # libvirt-backup.sh - Скрипт для резервного копирования виртуальных машин libvirt.
@@ -106,4 +107,5 @@ if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNN
 
 Скрипт не поддерживает имена и пути виртуальных машин с пробелами.
 
+##
 В случае, если вы обнаружили ошибку, неточность, или имеете предложение по улучшению скрипта - свяжитесь с разработчиком.
