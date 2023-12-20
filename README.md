@@ -41,7 +41,7 @@ By default, the configuration file is created (and then searched for by the scri
 CONFIGFILE="/etc/$SCRIPTNAME.config"
 if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNNAME"; exit 1; fi
 ```
-The first line locates the script in '/etc', the second line checks for sudo privileges.
+The first line locates the config in '/etc', the second line checks for sudo privileges.
 
 For your convenience, the script adds a complete list of your virtual machines and their disks to the configuration file. To generate an up-to-date list delete or rename the configuration file and run the script, a new configuration template with an up-to-date list will be generated.
 
@@ -90,7 +90,7 @@ chmod +x libvirt-backup.sh
 ВНИМАНИЕ! В данный момент поддерживаются следующие пакетные менеджеры: apt-get, dnf, yum, zypper, pacman.
 Если вы хотите добавить поддержку другого пакетного менеджера - свяжитесь с разработчиком.
 
-Также при первом запуске скрипт создаст файл конфигурации, который вам нужно будет отредактировать под свои нужды. Файл сожержит комментарии с объяснением каждого параметра и указанием значений по-умолчанию.
+Также при первом запуске скрипт создаст файл конфигурации, который вам нужно будет отредактировать под свои нужды. Файл содержит комментарии с объяснением каждого параметра и указанием значений по-умолчанию.
 
 По-умолчанию файл конфигурации создаётся (а затем ищется скриптом) в той же папке, в которой находится сам скрипт, и с тем же именем и расширением '.conf'. Имеется возможность хранения файла конфигурации в папке '/etc'. Для этого вам нужно раскомментировать две строки в теле скрипта:
 
@@ -98,7 +98,7 @@ chmod +x libvirt-backup.sh
 CONFIGFILE="/etc/$SCRIPTNAME.config"
 if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNNAME"; exit 1; fi
 ```
-Первая строка определяет местоположение скрипта в '/etc', вторая проверяет наличие прав sudo.
+Первая строка определяет местоположение файла конфигурации в '/etc', вторая проверяет наличие прав sudo.
 
 Для вашего удобства скрипт сразу добавляет в файл конфигурации полный список ваших виртуальных машин и их дисков. Чтобы сгенерировать актуальный список удалите или переименуйте файл конфигурации и запустите скрипт, будет сгенерирован новый шаблон конфигурации с актуальным списком.
 
