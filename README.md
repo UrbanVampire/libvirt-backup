@@ -1,8 +1,8 @@
 # libvirt-backup.sh - libvirt VMs backup script.
 ## English readme.
-[:arrow_down:Инструкция на русском ниже.](##%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B0%D1%8F-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F)
+[:arrow_down:Инструкция на русском ниже.]
 
-##Features:
+## Features:
 
 - simultaneous operation of several copies of the script with different settings on one host,
 - "blacklist" to exclude some virtual machines from the backup process,
@@ -11,7 +11,7 @@
 - output of logs to STDIN, systemd journal, logfile,
 - sending the results to e-mail or Telegram.
 
-##Installation:
+## Installation:
 
 Download:
 ```
@@ -46,9 +46,9 @@ In case you find a bug, inaccuracy, or have a suggestion to improve the script -
 
 # libvirt-backup.sh - Скрипт для резервного копирования виртуальных машин libvirt.
 ## Русская инструкция.
-[:arrow_up:English readme is above.](#libvirt-backup)
+[:arrow_up:English readme is above.]
 
-##Возможности:
+## Возможности:
 
 - одновременная работа нескольких копий скрипта с разными настройками на одном хосте,
 - "чёрный список" для исключения части виртуальных машин из процесса резервного копирования,
@@ -57,7 +57,7 @@ In case you find a bug, inaccuracy, or have a suggestion to improve the script -
 - вывод логов на STDIN, в журнал systemd, в файл,
 - отправка результатов работы на e-mail или в Telegram.
 
-##Установка:
+## Установка:
 
 Скачать:
 ```
