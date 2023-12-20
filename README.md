@@ -26,13 +26,14 @@ run:
 ./libvirt-backup.sh
 ```
 
-At the first run the script will install the utilities required for operation.
+At the first run the script will install required utilities.
+
 NOTE: The following package managers are currently supported: apt-get, dnf, yum, zypper, pacman.
 If you want to add support for another package manager - please contact the developer.
 
 Also, when you run the script for the first time, it will create a configuration file that you will need to edit to suit your needs. The file contains comments explaining each parameter and specifying default values.
 
-By default, the configuration file is created (and then searched for by the script) in the same folder as the script itself, with the same name and '.conf' extension. It is possible to store the configuration file in the '/etc' folder. To do this, you need to uncomment two lines in the body of the script:
+By default, the configuration file is created (and then searched for by the script) in the same folder as the script itself, with the same name and '.conf' extension. It is possible to store the configuration file in the '/etc' folder. To do this, you need to uncomment two lines in the script:
 
 ```
 CONFIGFILE="/etc/$SCRIPTNAME.config"
@@ -41,6 +42,10 @@ if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNN
 The first line locates the script in '/etc', the second line checks for sudo privileges.
 
 For your convenience, the script adds a complete list of your virtual machines and their disks to the configuration file. To generate an up-to-date list delete or rename the configuration file and run the script, a new configuration template with an up-to-date list will be generated.
+
+## Known issues:
+
+The script does not support VM's names and paths with spaces.
 
 In case you find a bug, inaccuracy, or have a suggestion to improve the script - please contact the developer.
 
@@ -87,5 +92,9 @@ if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNN
 Первая строка определяет местоположение скрипта в '/etc', вторая проверяет наличие прав sudo.
 
 Для вашего удобства скрипт сразу добавляет в файл конфигурации полный список ваших виртуальных машин и их дисков. Чтобы сгенерировать актуальный список удалите или переименуйте файл конфигурации и запустите скрипт, будет сгенерирован новый шаблон конфигурации с актуальным списком.
+
+## Известные проблемы:
+
+Скрипт не поддерживает имена и пути виртуальных машин с пробелами.
 
 В случае, если вы обнаружили ошибку, неточность, или имеете предложение по улучшению скрипта - свяжитесь с разработчиком.
