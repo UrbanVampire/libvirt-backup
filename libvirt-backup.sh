@@ -132,40 +132,40 @@ if [ ! -e $CONFIGFILE ]; then
 	checkandinstall bzip2
 	checkandinstall pigz
 
-	a="# $SCRIPTNAME config file.
+	a="### $SCRIPTNAME config file.
 
-# Commented (started with \"#\") stings are ignored.
+### Commented (started with \"#\") stings are ignored.
 
-# Please remember that the computer always does what its TOLD to do, not what you'd WANT it to do.
+### Please remember that the computer always does what its TOLD to do, not what you'd WANT it to do.
 
-# Folder to store backups:
+### Folder to store backups:
 BACKUPSTORAGE=\"/mnt/BackUp\"
 
-# Backups folder structure pattern.
-# \"(BUVMname)\" will be replaced with the VM's name.
+### Backups folder structure pattern.
+### \"(BUVMname)\" will be replaced with the VM's name.
 BACKUPMASK=\"(BUVMname)/(BUVMname)_\$(date +%Y-%m-%d_%H-%M-%S)\"
 #BACKUPMASK=\"(BUVMname)/\$(date +%Y)/\$(date +%m)/\$(date +%d)\"
 
-# If set, backups will be compressed.
-# Value must be one of the following:
-# \"7z\" (recommended) - compress with 7zip (7z extention)
-# \"tar.gz\" - compress with tar/gzip (tar.gz extention)
-# \"pigz\" - compress with pigz (tar.gz extention)
-# \"tar.bz\" - compress with tar/bzip2 (tar.bz extention)
-Default - do not compress.
+### If set, backups will be compressed.
+### Value must be one of the following:
+### \"7z\" (recommended) - compress with 7zip (7z extention)
+### \"tar.gz\" - compress with tar/gzip (tar.gz extention)
+### \"pigz\" - compress with pigz (tar.gz extention)
+### \"tar.bz\" - compress with tar/bzip2 (tar.bz extention)
+### Default - do not compress.
 COMPRESS=\"7z\"
 
-# List of VMs to ignore during backup process, space separated.
-# Default - backup all VMs.
+### List of VMs to ignore during backup process, space separated.
+### Default - backup all VMs.
 #IGNORELIST=\"Vm1 Vm2\"
 
-# Limit VM's backup to specified disks.
-# Format:
-# VM=\"/path/to/Disk1.qcow /path/to/Disk2.qcow\"
-# where VM - virtual machine name,
-# Disk1... - full path to VM's disk, space separated.
-# If set, only listed disks will be copied.
-# Default - backup all disks.
+### Limit VM's backup to specified disks.
+### Format:
+### VM=\"/path/to/Disk1.qcow /path/to/Disk2.qcow\"
+### where VM - virtual machine name,
+### Disk1... - full path to VM's disk, space separated.
+### If set, only listed disks will be copied.
+### Default - backup all disks.
 "
 # form domains disks list
 b=""
@@ -185,58 +185,59 @@ for DOMAIN in $DOMAINS; do
 done
 c="
 
-# To automatically generate the list of VMs and it's disks
-# just delete config file an run $OWNNAME script.
+### To automatically generate the list of VMs and it's disks
+### just delete config file an run $OWNNAME script.
 
-# Logging config.
+### Logging config.
 
-# Verbose? If set to 0 or commented, only errors will be reported.
-# Default - 0.
+### Verbose? If set to 0 or commented, only errors will be reported.
+### Default - 0.
 VERBOSE=1
 
-# Report on succesful backup?
-# If VERBOSE set to 0, on succesful backup no message will be displayed
-# (and, more importantly, send to e-mail or Telegram).
-# This option changes that behaviour.
-# Default - 0.
+### Report on succesful backup?
+### If VERBOSE set to 0, on succesful backup no message will be displayed
+### (and, more importantly, send to e-mail or Telegram).
+### This option changes that behaviour.
+### Default - 0.
 #REPORTONSUCCESS=1
 
-# Log to STDOUT? Default - 0.
+### Log to STDOUT? Default - 0.
 LOG2STD=1
 
-# Log to systemd? Default - 0.
+### Log to systemd? Default - 0.
 #LOG2SYSD=1
 
-# Log to logfile? Default - 0.
+### Log to logfile? Default - 0.
 #LOG2FILE=1
-# Log filename (if LOG2FILE is enabled).
-# Default - same folder and name as script itself.
+
+### Log filename (if LOG2FILE is enabled).
+### Default - same folder and name as script itself.
 #LOGFILE=\"/var/log/$SCRIPTNAME.log\"
 
-# Send logs to e-mail? Default - 0.
+### Send logs to e-mail? Default - 0.
 #LOG2EMAIL=1
-# SMTP Settings (if LOG2EMAIL is enabled):
-# SMTP Server:port:
+### SMTP Settings (if LOG2EMAIL is enabled):
+### SMTP Server:port:
 #SMTPServer=\"smtp.mail.com:587\"
-# SMTP Server User:
+### SMTP Server User:
 #SMTPUser=\"user@email.com\"
-# SMTP Server password:
+### SMTP Server password:
 #SMTPPass=\"YourEmailPassword\"
-# FROM addr/name:
+### FROM addr/name:
 #SMTPFrom=\"BackUp Robot <user@email.com>\"
-# TO addr/name:
+### TO addr/name:
 #SMTPTo=\"Ме Myself And I <user@email.com>\"
-# Email subject:
+### Email subject:
 #SMTPSubj=\"Backup Report \$(date +%Y-%m-%d)\"
 
-# Send Logs to Telegram via Bot? Default - 0.
+### Send Logs to Telegram via Bot? Default - 0.
 #LOG2TELEGRAM=1
-# Telegram settings (if LOG2TELEGRAM is enabled):
-# Bot API key:
+### Telegram settings (if LOG2TELEGRAM is enabled):
+### Bot API key:
 #TLGAPIKEY=\"1234567890:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"
-# User(s) ID(s) to send message to, space separated:
+### User(s) ID(s) to send message to, space separated:
 #TLGUSERID=\"111111111 222222222\"
-# Timeout. Default - 10.
+### Timeout. Default - 10.
 #TLGTIMEOUT=10
 "
 	echo "$a$b$c" > $CONFIGFILE
@@ -268,7 +269,7 @@ WARNINGS=0
 if [ $EUID -ne 0 ]; then echo "Must be run with superuser privileges: sudo $OWNNAME"; exit 1; fi
 
 # Get domains list
-DOMAINS="$(virsh list --all | tail -n +3 | awk '{print $2}')"
+DOMAINS="$(getdom)"
 
 BACKUPSTORAGE=$(slasher $BACKUPSTORAGE)
 IFS=', ' read -r -a ignore <<< "$IGNORELIST"
@@ -281,7 +282,9 @@ for DOMAIN in $DOMAINS; do
 	fi
 
 	# Create backup folder
+	# Generate path
 	BACKUPFOLDER=$(echo $BACKUPSTORAGE$(slasher $BACKUPMASK))
+	# Replace macro with actual VM's name
 	BACKUPFOLDER=$(echo "${BACKUPFOLDER//(BUVMname)/"$DOMAIN"}")
 	verboselog "Creating folder $BACKUPFOLDER."
 	if [ ! -d $BACKUPFOLDER ]; then
@@ -294,6 +297,7 @@ for DOMAIN in $DOMAINS; do
 	fi
 
 	# Store VM's settings
+	verboselog "Storing '$DOMAIN' settings to '$BACKUPFOLDER$DOMAIN.xml'."
 	virsh dumpxml $DOMAIN > $BACKUPFOLDER$DOMAIN.xml
 
 	# Get disks info
@@ -362,6 +366,7 @@ for DOMAIN in $DOMAINS; do
 	verboselog "Copying disks for '$DOMAIN'."
 	for t in $IMAGES; do
 		NAME=`basename "$t"`
+		verboselog "'$t' -> '$BACKUPFOLDER$NAME'"
 		cp "$t" "$BACKUPFOLDER$NAME"
 	done
 
@@ -375,6 +380,9 @@ for DOMAIN in $DOMAINS; do
 				ERRORS=1
 			fi
 		done
+		if [ $ERRORS -ne 0 ]; then
+			continue
+		fi
 		# Cleanup left over backup images.
 		verboselog "Do some cleanups."
 		for t in $SNAPSHOTIMAGES; do
@@ -387,7 +395,7 @@ for DOMAIN in $DOMAINS; do
 	fi
 
 	if [ ! -z "$COMPRESS" ] ; then
-		verboselog "Archiving backup for '$DOMAIN'."
+		verboselog "Archiving backup for '$DOMAIN' with $COMPRESS."
 		archivename=$(echo "$BACKUPFOLDER" | sed 's:/*$::')
 		case $COMPRESS in
 			7z)
@@ -444,7 +452,7 @@ if [ ! -z "$LOG2EMAIL" ] && [ $LOG2EMAIL == 1 ]; then
 		if [ ! -z "$LOGTEXT" ]; then
 			TMPFILE=$(mktemp)
 			echo -e "From: $SMTPFrom\nTo: $SMTPTo\nSubject: $SMTPSubj\n\n$LOGTEXT" > $TMPFILE
-			curl "$SMTPServer" --ssl-reqd  --user "$SMTPUser:$SMTPPass" --mail-from "$SMTPFrom" --mail-rcpt "$SMTPTo" --upload-file $TMPFILE > /dev/null
+			curl "$SMTPServer" --ssl-reqd --user "$SMTPUser:$SMTPPass" --mail-from "$SMTPFrom" --mail-rcpt "$SMTPTo" --upload-file $TMPFILE > /dev/null
 			rm $TMPFILE
 		fi
 	fi
