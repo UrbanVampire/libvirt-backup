@@ -385,6 +385,7 @@ for DOMAIN in $DOMAINS; do
 	done
 
 	# Merge changes back.
+	MERGERR=0
 	if [ $STATUS != "shut" ]; then
 		verboselog "Removing snapshots for '$DOMAIN'."
 		for t in $TARGETS; do
@@ -392,9 +393,10 @@ for DOMAIN in $DOMAINS; do
 			if [ $? -ne 0 ]; then
 				logger "Could not merge changes for disk $t of '$DOMAIN'. VM may be in invalid state."
 				ERRORS=1
+				MERGERR=1
 			fi
 		done
-		if [ $ERRORS -ne 0 ]; then
+		if [ $MERGERR -ne 0 ]; then
 			continue
 		fi
 		# Cleanup left over backup images.
